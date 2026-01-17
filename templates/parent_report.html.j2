@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <title>รายงานสรุปปลายภาค - {{ student.name_th }}</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 28px; line-height: 1.5; }
+    h1, h2 { margin-bottom: 6px; }
+    .meta { color: #444; margin-bottom: 18px; }
+    .card { border: 1px solid #ddd; border-radius: 10px; padding: 14px 16px; margin: 12px 0; }
+    ul { margin-top: 6px; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ddd; padding: 8px; vertical-align: top; }
+    th { background: #f6f6f6; text-align: left; }
+    .small { color: #555; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <h1>รายงานสรุปปลายภาค (ผู้ปกครอง)</h1>
+  <div class="meta">
+    <div><b>นักเรียน:</b> {{ student.name_th }} ({{ student.classroom }})</div>
+    <div><b>ภาคเรียน:</b> {{ student.term }} | <b>กลุ่มการเรียน:</b> {{ student.group_name }} — {{ student.group_goal_th }}</div>
+  </div>
+
+  <div class="card">
+    <h2>สรุปภาพรวม</h2>
+    <p>{{ report.overall_summary }}</p>
+    <p class="small">
+      หมายเหตุ: “ผลการเรียน” อ้างอิงจากงานที่ครูมอบหมายเท่านั้น ส่วน “การฝึกเพิ่มเติม” ใช้เป็นข้อมูลด้านพฤติกรรมเชิงบวก
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>จุดแข็ง</h2>
+    <ul>
+      {% for s in report.strengths %}
+      <li>{{ s }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>จุดที่ควรโฟกัส</h2>
+    <ul>
+      {% for s in report.focus_areas %}
+      <li>{{ s }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>หลักฐานจากงานที่มอบหมาย</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ทักษะ</th>
+          <th>ความคืบหน้า</th>
+          <th>ความถูกต้อง</th>
+          <th>หมายเหตุ</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for e in report.evidence %}
+        <tr>
+          <td>{{ e.skill }}</td>
+          <td>{{ e.assigned_completion }}</td>
+          <td>{{ e.assigned_accuracy }}</td>
+          <td>{{ e.notes }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>พฤติกรรมการเรียนรู้</h2>
+    <ul>
+      {% for h in report.learning_habits %}
+      <li>{{ h }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>แผน 2 สัปดาห์ (ทำได้จริง)</h2>
+    <ol>
+      {% for step in report.next_steps_2_weeks %}
+      <li>
+        <b>{{ step.action }}</b><br/>
+        <span class="small"><b>ทำไม:</b> {{ step.why }}</span><br/>
+        <span class="small"><b>วิธีทำ:</b> {{ step.how }}</span>
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>ข้อความถึงผู้ปกครอง</h2>
+    <p>{{ report.encouragement }}</p>
+  </div>
+
+  {% if report.flags_for_teacher_followup and report.flags_for_teacher_followup|length > 0 %}
+  <div class="card">
+    <h2>ข้อเสนอแนะให้ครูติดตาม</h2>
+    <ul>
+      {% for f in report.flags_for_teacher_followup %}
+      <li>{{ f }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+</body>
+</html>
