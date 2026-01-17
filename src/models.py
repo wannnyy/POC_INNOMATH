@@ -14,19 +14,31 @@ class Student(BaseModel):
     group_name: GroupName
     group_goal_th: str
 
+class SubtopicRef(BaseModel):
+    topic: str
+    subtopic: str
+
+class PrereqEdge(BaseModel):
+    prerequisite: SubtopicRef
+    dependent: SubtopicRef
+
 class SkillTarget(BaseModel):
-    skill: str
+    topic: str
+    subtopic: str
     difficulty: Difficulty
     required_questions: int
 
 class SkillSummary(BaseModel):
-    skill: str
+    topic: str
+    subtopic: str
     source: Source
     difficulty: Difficulty
-    attempted: int
-    correct: int
+    attempted_questions: int
+    avg_stars: float  # 0..3
     avg_time_sec: float
-    retry_rate: Optional[float] = None  # mostly for assigned
+    avg_attempts: float  # attempts per question (>=1)
+    # Optional: if you want
+    last_activity: Optional[str] = None
 
 class Engagement(BaseModel):
     active_days: int
@@ -39,12 +51,14 @@ class LLMInput(BaseModel):
     assigned_summary: List[SkillSummary]
     extra_summary: List[SkillSummary]
     engagement: Engagement
+    prerequisite_edges: List[PrereqEdge] = Field(default_factory=list)
 
 # LLM output contract
 class EvidenceItem(BaseModel):
-    skill: str
+    topic: str
+    subtopic: str
     assigned_completion: str
-    assigned_accuracy: str
+    assigned_mastery: str
     notes: str
 
 class NextStep(BaseModel):

@@ -62,9 +62,9 @@
       <tbody>
         {% for e in report.evidence %}
         <tr>
-          <td>{{ e.skill }}</td>
+          <td>{{ e.topic }}<br/><span class="small">{{ e.subtopic }}</span></td>
           <td>{{ e.assigned_completion }}</td>
-          <td>{{ e.assigned_accuracy }}</td>
+          <td>{{ e.assigned_mastery }}</td>
           <td>{{ e.notes }}</td>
         </tr>
         {% endfor %}

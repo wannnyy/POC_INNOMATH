@@ -13,12 +13,13 @@ PARENT_REPORT_SCHEMA = {
         "type": "object",
         "additionalProperties": False,
         "properties": {
-          "skill": {"type": "string"},
+          "topic": {"type": "string"},
+          "subtopic": {"type": "string"},
           "assigned_completion": {"type": "string"},
-          "assigned_accuracy": {"type": "string"},
+          "assigned_mastery": {"type": "string"},
           "notes": {"type": "string"}
         },
-        "required": ["skill","assigned_completion","assigned_accuracy","notes"]
+        "required": ["topic","subtopic","assigned_completion","assigned_mastery","notes"]
       }
     },
     "learning_habits": {"type": "array", "items": {"type": "string"}},
@@ -44,13 +45,17 @@ PARENT_REPORT_SCHEMA = {
   ]
 }
 
-SYSTEM_INSTRUCTIONS_TH = """คุณเป็นนักวิเคราะห์การเรียนรู้สำหรับนักเรียนประถมศึกษาปีที่ 4–6 ในวิชาคณิตศาสตร์
+SYSTEM_INSTRUCTIONS_TH = """คุณเป็นนักวิเคราะห์การเรียนรู้สำหรับนักเรียนประถมศึกษาปีที่ 4 วิชาคณิตศาสตร์
+
 หลักการสำคัญ:
 - ประเมิน “ผลการเรียน” โดยอ้างอิงเฉพาะงานที่ครูมอบหมาย (assigned homework) เท่านั้น
-- ใช้ “การเล่น/ฝึกเพิ่มเติมนอกงานที่มอบหมาย” เป็นสัญญาณด้านพฤติกรรมเชิงบวกเท่านั้น (ห้ามใช้ลงโทษหรือทำให้ดูแย่)
-- นักเรียนอาจอยู่คนละกลุ่ม (Needs Practice / On Track / Advanced) ทำให้งานที่ได้รับต่างกันได้: สรุปผลโดยเทียบกับ “เป้าหมายงานที่ได้รับ” ไม่ใช่เทียบจำนวนรวม
-- เขียนรายงานภาษาไทยให้ผู้ปกครองอ่าน เข้าใจง่าย สุภาพ ไม่ตำหนิ
-- ต้องมีหลักฐานเชิงข้อมูลสั้นๆ และแผน 2 สัปดาห์ที่ทำได้จริง 3 ข้อ"""
+- ใช้ “การฝึกเพิ่มเติมนอกงานที่มอบหมาย” เป็นสัญญาณด้านพฤติกรรมเชิงบวกเท่านั้น (ห้ามใช้ลงโทษ/ทำให้ดูแย่)
+- นักเรียนอาจอยู่คนละกลุ่ม (Needs Practice / On Track / Advanced) ทำให้งานที่ได้รับต่างกัน: สรุปผลโดยเทียบกับ “เป้าหมายงานที่ได้รับ”
+- ข้อมูลต่อข้อมี: ดาว (0–3), เวลา, จำนวนครั้งที่ลองทำ (attempts)
+- หากมี prerequisite_edges ให้ช่วยอธิบาย “สาเหตุราก”:
+  ถ้านักเรียนอ่อนในบทย่อย A และบทย่อย B ที่ขึ้นกับ A อ่อนตาม ให้ชี้ว่า B อ่อนเพราะ A ยังไม่แน่น และแนะนำให้แก้ A ก่อน
+- เขียนภาษาไทย สุภาพ อ่านง่าย ไม่ตำหนิ พร้อมแผน 2 สัปดาห์ที่ทำได้จริง 3 ข้อ
+- ห้ามใส่ข้อความนอก JSON"""
 
 def build_user_prompt(input_payload: dict) -> str:
     return (
